@@ -281,7 +281,7 @@ footer p,footer a{color:var(--mu2);font-size:15px;display:block;text-decoration:
 <p class="err" id="er" role="alert"></p>
 <button class="btn b1" type="submit">Request my estimate</button>
 </form>
-<div class="ok" id="ok" role="status"><h3 style="margin-bottom:10px">Almost done. Send your request.</h3><p style="color:var(--mu);margin-bottom:16px">This form doesn't send automatically yet. Tap below to email your details, or call or text us.</p><div class="acts"><a class="btn b1" id="mt" href="#">Email my request</a><a class="btn b2 dk" href="tel:+15134004317">Call (513) 400-4317</a></div></div>
+<div class="ok" id="ok" role="status"><h3 style="margin-bottom:10px">One more step. Send your request.</h3><p style="color:var(--mu);margin-bottom:16px">We couldn't send your request automatically. Tap below to email your details, or call or text us.</p><div class="acts"><a class="btn b1" id="mt" href="#">Email my request</a><a class="btn b2 dk" href="tel:+15134004317">Call (513) 400-4317</a></div></div>
 </div>
 </div>
 </div></section>
@@ -378,13 +378,21 @@ document.title=T[v];var el=h[1]&&document.getElementById(h[1]);
 if(el){el.scrollIntoView()}else{window.scrollTo(0,0)}}
 window.addEventListener('hashchange',route);route();
 document.getElementById('fm').addEventListener('submit',function(ev){ev.preventDefault();
-var g=function(i){return document.getElementById(i).value.trim()},er=document.getElementById('er');
+var g=function(i){return document.getElementById(i).value.trim()},er=document.getElementById('er'),ok=document.getElementById('ok'),form=this,btn=form.querySelector('button[type=submit]');
 if(!g('n')||!g('p')||!g('s')){er.textContent='Please enter your name, phone number and the service you need.';return}
 if(g('e')&&!/^\S+@\S+\.\S+$/.test(g('e'))){er.textContent='That email address looks incomplete. Check it and try again.';return}
 er.textContent='';
-var b='Name: '+g('n')+'\nPhone: '+g('p')+'\nEmail: '+g('e')+'\nService: '+g('s')+'\nProperty type: '+g('t')+'\nAddress/ZIP: '+g('a')+'\nPreferred date: '+g('d')+'\nDetails: '+g('m');
-document.getElementById('mt').href='mailto:damarkluxuryenterprises718@gmail.com?subject='+encodeURIComponent('Estimate request: '+g('s'))+'&body='+encodeURIComponent(b);
-this.style.display='none';document.getElementById('ok').classList.add('on')});
+var data={name:g('n'),phone:g('p'),email:g('e'),service:g('s'),property_type:g('t'),address_or_zip:g('a'),preferred_date:g('d'),project_details:g('m'),_subject:'New $25 estimate request: '+g('s'),_template:'table',_captcha:'false',_honey:''};
+var body='Name: '+g('n')+'\nPhone: '+g('p')+'\nEmail: '+g('e')+'\nService: '+g('s')+'\nProperty type: '+g('t')+'\nAddress/ZIP: '+g('a')+'\nPreferred date: '+g('d')+'\nDetails: '+g('m');
+var mail='mailto:damarkluxuryenterprises718@gmail.com?subject='+encodeURIComponent('Estimate request: '+g('s'))+'&body='+encodeURIComponent(body);
+var fallbackHTML=window.__okHTML||(window.__okHTML=ok.innerHTML);
+var showOk=function(){form.style.display='none';ok.innerHTML='<h3 style="margin-bottom:10px">Thank you. Your request was sent.</h3><p style="color:var(--mu);margin-bottom:16px">We received your details and will contact you soon. Need us sooner? Call or text us.</p><div class="acts"><a class="btn b2 dk" href="tel:+15134004317">Call (513) 400-4317</a></div>';ok.classList.add('on')};
+var showFallback=function(){form.style.display='none';ok.innerHTML=fallbackHTML;document.getElementById('mt').href=mail;ok.classList.add('on')};
+btn.disabled=true;btn.textContent='Sending...';
+fetch('https://formsubmit.co/ajax/damarkluxuryenterprises718@gmail.com',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(data)})
+.then(function(r){return r.json()})
+.then(function(j){if(j&&(j.success===true||j.success==='true')){showOk()}else{showFallback()}})
+.catch(function(){showFallback()})});
 </script>
 </body>
 </html>
